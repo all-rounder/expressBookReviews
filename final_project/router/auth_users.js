@@ -46,8 +46,10 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
-  const review = req.params.review;
-  books[isbn].reviews = review;
+  const review = req.query.review;
+  const username = req.session.authorization.username;
+  books[isbn].reviews[username] = review;
+  console.log(books[isbn].reviews);
   res.send(`The review for the book with ISBN ${isbn} has benn added/updated.`);
 });
 
@@ -55,7 +57,8 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 regd_users.delete("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const username = req.session.authorization.username;
-  books[isbn].reviews = {};
+  delete books[isbn].reviews[username];
+  console.log(books[isbn].reviews);
   res.send(`Reviews for the book with ISBN ${isbn} by the user ${username} has benn deleted.`);
 });
 
